@@ -1,4 +1,4 @@
-var roleUpgrader = require('role.upgrader.js');
+var roleUpgrader = require('role.upgrader');
 module.exports = {
     run: function(creep){
 
@@ -23,7 +23,7 @@ module.exports = {
             if(creep.carry.energy === creep.carryCapacity){
                 // console.log("creep.carry.energy === creep.carryCapacity");
                 // console.log("running creep.transfer(closeSpawn) gives this response ->", creep.transfer(closeSpawn));
-                if(Game.spawns[closeSpawn].energy <= (300 - creep.carryCapacity)){
+                if(Game.spawns["Spawn1"].energy <= (300 - creep.carryCapacity)){
                      if(creep.transfer(closeSpawn, RESOURCE_ENERGY, creep.carry.energy) === ERR_NOT_IN_RANGE){
                         //console.log("Creep.transfer(", closeSpawn,") === ERR_NOT_IN_RANGE");
                         creep.moveTo(closeSpawn);
