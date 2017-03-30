@@ -4,13 +4,13 @@ module.exports = {
 
         var spawnList = Game.spawns;
         var creepList = Game.spawns["Spawn1"].room.find(FIND_MY_CREEPS);
-        console.log(creepList);
+        //console.log(creepList);
         var harvesters = [];
         var builders = [];
         var upgraders = [];
 
         for(let name in creepList){
-            console.log(creepList[name].memory.role);
+            //console.log(creepList[name].memory.role);
             switch(creepList[name].memory.role){
                 case "harvester":
                     harvesters.push(creepList[name].memory.role);
@@ -22,7 +22,7 @@ module.exports = {
                     builders.push(creepList[name].memory.role);
                     break;
                 default:
-                    console.log("not mine?");
+                    //console.log("not mine?");
             }
         }
         //console.log("Harvesters.length = ",harvesters.length);
@@ -39,14 +39,19 @@ module.exports = {
 
         }
 
-		if(spawnN.memory.totalHarvesters < 4){
+		if(spawnN.memory.totalHarvesters < 14 && spawnN.energy >= 250){
             console.log("totalHarvester is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, MOVE, CARRY], undefined, {role: 'harvester'});
+            Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'harvester'});
         }
-        else if(spawnN.memory.totalUpgraders < 4){
+        else if(spawnN.memory.totalUpgraders < 3 && spawnN.energy >= 250){
             console.log("totalUpgrader is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, WORK, MOVE, CARRY], undefined, {role: 'upgrader'});
+            Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'upgrader'});
         }
+        else if(spawnN.memory.totalBuilders < 2 && spawnN.memory.totalUpgraders === 1 && spawnN.energy >= 300){
+            console.log("totalBuilder is too low. Spawing another one");
+            Game.spawns["Spawn1"].createCreep([WORK,WORK,MOVE,CARRY], undefined, {role: 'builder'});
+        }
+
 
 
     }

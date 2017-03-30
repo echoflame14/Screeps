@@ -1,6 +1,6 @@
 module.exports = {
-    spawnH: function(){
-        Game.spawns["Spawn1"].createCreep([WORK,CARRY,MOVE,MOVE], undefined, {role: 'harvester'});
+    spawnX: function(body, type){
+        Game.spawns["Spawn1"].createCreep(body, undefined, {role: type});
     },
     findClose: function(creep){
         //console.log("creep = ", creep);

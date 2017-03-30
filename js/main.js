@@ -7,7 +7,6 @@ var sm = require('spawnManager');
 
 module.exports.loop = function () {
 // 	startUp.run();
-
     sm.updateTotals();
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];

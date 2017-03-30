@@ -1,0 +1,2 @@
+improvements I need to make:
+	Fix the bug where if 8 creeps surround the spawn the game hangs.
