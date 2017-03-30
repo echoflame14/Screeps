@@ -1,4 +1,4 @@
-
+var mt = require('manualTasks');
 module.exports = {
     updateTotals: function(){
 
@@ -33,14 +33,21 @@ module.exports = {
             spawnN.memory.totalBuilders = builders.length;
             //console.log(spawnN, ": harvesters = ", spawnN.memory.totalHarvesters);
         }
-        if(spawnN.memory.totalHarvesters < 4){
+		if(spawnN.memory.totalHarvesters < 4 && spawnN.memory.totalUpgraders >= 1){
             console.log("totalHarvester is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, MOVE, CARRY], undefined, {role: 'harvester'});
+            mt.changeToHarvester(3);
+				
         }
-        else if(spawnN.memory.totalUpgraders < 4){
-            console.log("totalUpgrader is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, WORK, MOVE, CARRY], undefined, {role: 'upgrader'});
-        }
+        else{
+			if(spawnN.memory.totalHarvesters < 4){
+	            console.log("totalHarvester is too low. Spawing another one");
+	            Game.spawns["Spawn1"].createCreep([WORK, MOVE, CARRY], undefined, {role: 'harvester'});
+	        }
+	        else if(spawnN.memory.totalUpgraders < 4){
+	            console.log("totalUpgrader is too low. Spawing another one");
+	            Game.spawns["Spawn1"].createCreep([WORK, WORK, MOVE, CARRY], undefined, {role: 'upgrader'});
+	        }
+		}
 
     }
 };

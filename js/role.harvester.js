@@ -14,9 +14,9 @@ module.exports = {
         //console.log("Game.spawns[spawnTarget] = ", Game.spawns[spawnTarget]);
         var mem = creep.memory;
 
-        if(closeSpawn.energy === 300){
-            roleUpgrader.run(creep);
-        }
+        // if(closeSpawn.energy === 300){
+        //     roleUpgrader.run(creep);
+        // }
         else{
             creep.memory.role = "harvester";
 

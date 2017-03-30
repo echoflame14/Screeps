@@ -18,5 +18,17 @@ module.exports = {
             }
             count++;
         }
+    },
+	changeToHarvester: function(num2Change){
+
+        var count = 0;
+        var myCreeps = Game.spawns["Spawn1"].room.find(FIND_MY_CREEPS);
+        for(let name in myCreeps){
+            var creep = myCreeps[name];
+            if(count < num2Change){
+                creep.memory.role = "harvester";
+            }
+            count++;
+        }
     }
 };
