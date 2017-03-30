@@ -1,9 +1,9 @@
-var startUp = require('startUp.js');
-var roleHarvester = require('role.harvester.js');
-var roleBuilder = require('role.builder.js');
-var roleUpgrader = require('role.upgrader.js')
-var mt = require('manualTasks.js');
-var sm = require('spawnManager.js');
+var startUp = require('startUp');
+var roleHarvester = require('role.harvester');
+var roleBuilder = require('role.builder');
+var roleUpgrader = require('role.upgrader')
+var mt = require('manualTasks');
+var sm = require('spawnManager');
 
 module.exports.loop = function () {
 // 	startUp.run();
