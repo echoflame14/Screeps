@@ -1,2 +1,24 @@
 improvements I need to make:
 	Fix the bug where if 8 creeps surround the spawn the game hangs.
+		Could be done using a queue, where spawn has 6 open spots. When a creep wants to access spawn it needs to check if spawn has open spots
+		Another way to do this is to prevent loitering at spawn. Store the Game.time of entry and force exit if Game.
+
+	Storage of energy will need to be optimized.
+		Energy needs to be stored in spawn only when there is less than 300 energy in it.
+		Energy should be stored in extensions when spawn has 300 energy.
+		Energy should be stored in containers when extensions are full
+		Energy should be harvested from containers first, then extensions, then spawn
+
+
+	Each creep should store it's state in memory.
+
+	Each individual creep should change it's state based on the state of the other creeps.
+
+
+	To optimize cpu usage I will create a module to run and store things once and then import them to the other modules
+
+
+
+Simple goals for tonight.
+	Clean up files
+	Get back to prev state

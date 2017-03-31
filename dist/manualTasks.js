@@ -1,6 +1,8 @@
 module.exports = {
     spawnX: function(body, type){
+		console.log("mt.spawnX run: creating a ", type);
         Game.spawns["Spawn1"].createCreep(body, undefined, {role: type});
+
     },
     findClose: function(creep){
         //console.log("creep = ", creep);

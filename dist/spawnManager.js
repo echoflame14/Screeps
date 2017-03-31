@@ -39,15 +39,15 @@ module.exports = {
 
         }
 
-		if(spawnN.memory.totalHarvesters < 14 && spawnN.energy >= 250){
+		if(spawnN.memory.totalHarvesters < 12 && spawnN.energy >= 300){
             console.log("totalHarvester is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'harvester'});
+            Game.spawns["Spawn1"].createCreep([WORK,WORK, MOVE, CARRY], undefined, {role: 'harvester'});
         }
         else if(spawnN.memory.totalUpgraders < 3 && spawnN.energy >= 250){
             console.log("totalUpgrader is too low. Spawing another one");
             Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'upgrader'});
         }
-        else if(spawnN.memory.totalBuilders < 2 && spawnN.memory.totalUpgraders === 1 && spawnN.energy >= 300){
+        else if(spawnN.memory.totalBuilders < 2 && spawnN.memory.totalUpgraders === 3 && spawnN.energy >= 300){
             console.log("totalBuilder is too low. Spawing another one");
             Game.spawns["Spawn1"].createCreep([WORK,WORK,MOVE,CARRY], undefined, {role: 'builder'});
         }

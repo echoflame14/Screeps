@@ -1,64 +1,53 @@
-var roleUpgrader = require('role.upgrader');
 module.exports = {
-    run: function(creep){
+    run: function(creep, storageTarget){
+
+		if(creep.carry.energy < creep.carryCapacity){
+			// state is working
+			//console.log("not at carryCapacity: working now");
+			creep.memory.state = true; // true = working
+			// creep needs try to harvest
+			this.work(creep);
+		}
+		else {
+			creep.memory.state = false; // false = storing
+			// creep needs to try to store
+			this.store(creep);
+
+		}
+    },
+	work: function(creep){
+		var sources = creep.room.find(FIND_SOURCES_ACTIVE);
+		var sources = _.sortBy(sources, s => creep.pos.getRangeTo(s));
+		//console.log(sources);
+		if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE){
+				//console.log("not in range of source");
+				creep.moveTo(sources[0]);
+		}
+		else {
+			//console.log("WHAT THO+?????");
+			creep.harvest(sources[0]);
+		}
+	},
+	store: function(creep){
+		// if(creep.transfer(Game.spawns["Spawn1"], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE){
+		// 	creep.moveTo(Game.spawns["Spawn1"]);
+		//}
 
 
+		//console.log("storing");
+		var structures = creep.room.find(FIND_STRUCTURES);
 
-
-        var closeSource = creep.pos.findClosestByPath(FIND_SOURCES);
-        //console.log(closeSource, "<------- closeSource.");
-        var spawnTarget = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
-        //console.log("SpawnTarget = ", spawnTarget.name);
-        spawnTarget = spawnTarget.name;
-        var closeSpawn = Game.spawns[spawnTarget];
-        //console.log("Game.spawns[spawnTarget] = ", Game.spawns[spawnTarget]);
-        var mem = creep.memory;
-
-        if(closeSpawn.energy === 300){
-            // roleUpgrader.run(creep);
-        }
-        else{
-            creep.memory.role = "harvester";
-
-            if(creep.carry.energy === creep.carryCapacity){
-                // console.log("creep.carry.energy === creep.carryCapacity");
-                // console.log("running creep.transfer(closeSpawn) gives this response ->", creep.transfer(closeSpawn));
-                if(Game.spawns["Spawn1"].energy <= (300 - creep.carryCapacity)){
-                     if(creep.transfer(closeSpawn, RESOURCE_ENERGY, creep.carry.energy) === ERR_NOT_IN_RANGE){
-                        //console.log("Creep.transfer(", closeSpawn,") === ERR_NOT_IN_RANGE");
-                        creep.moveTo(closeSpawn);
-                        mem.mining = false;
-                        mem.transfering = false;
-                        mem.moving = true;
-                    }
-                    else{
-                        creep.transfer(closeSpawn, RESOURCE_ENERGY, creep.carry.energy);
-                    }
-                }
-
-
-
-
-            }
-            else if(creep.carry.energy < creep.carryCapacity){
-                //console.log("creep.carry.energy < creep.carryCapacity");
-                if(creep.harvest(closeSource) === ERR_NOT_IN_RANGE){
-                    //console.log("creep.harvest(closeSource) === ERR_NOT_IN_RANGE");
-                    creep.moveTo(closeSource);
-                    mem.mining = false;
-                    mem.transfering = false;
-                    mem.moving = true;
-                }
-                else{
-                    //console.log("creep.carry.energy is not < and is not === to creep.carrycapacity");
-                    mem.transfering = false;
-                    mem.moving = false;
-                    mem.mining = true;
-                }
-
-            }
-        }
-
-
-    }
+		var containers = [];
+		for (var a in structures) {
+			if(structures[a].structureType === 'container'){
+				containers.push(structures[a]);
+			}
+		}
+		//console.log('Containers: BEFORE = ', containers);
+		containers = _.sortBy(containers, s => creep.pos.getRangeTo(s));
+		//console.log('Containers: After = ', containers);
+		if(creep.transfer(containers[0], RESOURCE_ENERGY, creep.carryCapacity) === ERR_NOT_IN_RANGE){
+			creep.moveTo(containers[0]);
+		}
+	}
 };

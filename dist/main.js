@@ -1,16 +1,22 @@
-
+var roundSetup = require('roundSetup');
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
-var roleUpgrader = require('role.upgrader')
+var roleUpgrader = require('role.upgrader');
+var roleMover = require('role.mover');
 var mt = require('manualTasks');
 var sm = require('spawnManager');
 
+
+
 module.exports.loop = function () {
-// 	startUp.run();
-    sm.updateTotals();
+	//roundSetup.run();
+
+	//var targetStorgae = roundSetup.run();
+    sm.updateTotals(); //
+
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        mt.findClose(creep);
+        // mt.findClose(creep); not sure why it's here
         switch(creep.memory.role){
             case 'harvester':
                 roleHarvester.run(creep);
@@ -21,8 +27,11 @@ module.exports.loop = function () {
 			case 'upgrader':
 				roleUpgrader.run(creep);
 				break;
+			case 'mover':
+				roleMover.run(creep);
+				break;
             default:
-                roleHarvester.run(creep);
+                console.log(creep," has no memory.role");
         }
         // if(Game.spawns["Spawn1"].energy >= 300){
         //     //console.log("Spawn1 has 300 or more energy; Spawing a creep now");
