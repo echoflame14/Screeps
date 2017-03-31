@@ -9,21 +9,21 @@ module.exports = {
 		   	}
 	   }
 
-	   	needsWork.sort((x,y) => x.hits - y.hits);
+		//   	needsWork.sort((x,y) => x.hits - y.hits);
 	    if(needsWork){
 			console.log(needsWork[0], ": needs work! ", creep, "moving to bulid now" );
 		   if(creep.carry.energy < creep.carryCapacity){
-			   console.log("not enough energy");
+			   //console.log("not enough energy");
 			   if(creep.withdraw(Game.spawns["Spawn1"], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			   		creep.moveTo(Game.spawns["Spawn1"]);
-					console.log("not in range of spawn");
+					//console.log("not in range of spawn");
 			   }
 		   }
 		   else{
-			   console.log("plenty of energy");
+			   //console.log("plenty of energy");
 			   if(creep.repair(needsWork[0]) === ERR_NOT_IN_RANGE){
                    creep.moveTo(needsWork[0]);
-				   console.log("not in range, moving to needsWork");
+				   //console.log("not in range, moving to needsWork");
                }
 			   else {
 				   console.log("in range, building");

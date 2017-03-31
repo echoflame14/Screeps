@@ -8,6 +8,7 @@ module.exports = {
         var harvesters = [];
         var builders = [];
         var upgraders = [];
+		var movers = [];
 
         for(let name in creepList){
             //console.log(creepList[name].memory.role);
@@ -21,8 +22,11 @@ module.exports = {
                 case "builder":
                     builders.push(creepList[name].memory.role);
                     break;
+				case "mover":
+					movers.push(creepList[name].memory.role);
+					break;
                 default:
-                    //console.log("not mine?");
+                    console.log("not mine?");
             }
         }
         //console.log("Harvesters.length = ",harvesters.length);
@@ -31,6 +35,7 @@ module.exports = {
             spawnN.memory.totalHarvesters = harvesters.length;
             spawnN.memory.totalUpgraders = upgraders.length;
             spawnN.memory.totalBuilders = builders.length;
+			spawnN.memory.totalMovers = movers.length;
             //console.log(spawnN, ": harvesters = ", spawnN.memory.totalHarvesters);
         }
 		if(spawnN.memory.totalHarvesters < 4 && spawnN.memory.totalUpgraders >= 1){
@@ -43,11 +48,15 @@ module.exports = {
             console.log("totalHarvester is too low. Spawing another one");
             Game.spawns["Spawn1"].createCreep([WORK,WORK, MOVE, CARRY], undefined, {role: 'harvester'});
         }
-        else if(spawnN.memory.totalUpgraders < 3 && spawnN.energy >= 250){
+		else if(spawnN.memory.totalMovers < 3 && spawnN.energy >= 200){
+            console.log("totalHarvester is too low. Spawing another one");
+            Game.spawns["Spawn1"].createCreep([MOVE, MOVE, CARRY, CARRY], undefined, {role: 'harvester'});
+        }
+        else if(spawnN.memory.totalUpgraders < 8 && spawnN.energy >= 250){
             console.log("totalUpgrader is too low. Spawing another one");
             Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'upgrader'});
         }
-        else if(spawnN.memory.totalBuilders < 2 && spawnN.memory.totalUpgraders === 3 && spawnN.energy >= 300){
+        else if(spawnN.memory.totalBuilders < 3 && spawnN.memory.totalUpgraders === 3 && spawnN.energy >= 300){
             console.log("totalBuilder is too low. Spawing another one");
             Game.spawns["Spawn1"].createCreep([WORK,WORK,MOVE,CARRY], undefined, {role: 'builder'});
         }
