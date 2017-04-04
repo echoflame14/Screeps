@@ -44,6 +44,8 @@ module.exports = {
 		let roleTemplates = {
 			harv: {
 				body: [WORK, WORK, MOVE, CARRY],
+				largeBody: [WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY],
+				xtraLargeBody: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE],
 				name: undefined,
 				state: {
 					role: 'harvester',
@@ -62,7 +64,8 @@ module.exports = {
 				}
 			},
 			bldr: {
-				body: [WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY],
+				body: [WORK, WORK, MOVE, CARRY],
+				largeBody: [WORK, WORK, WORK, MOVE, CARRY, CARRY],
 				name: undefined,
 				state: {
 					role: 'builder'
@@ -79,24 +82,64 @@ module.exports = {
 		let harvesterLimit = 10;
 		let upgraderLimit = 1;
 		let builderLimit = 4;
+		console.log(Game.rooms['W35N52'].energyAvailable);
+		let E = Game.rooms['W35N52'].energyAvailable;
 		if (spawnMem.harvesters < harvesterLimit) {
-			// console.log("creating a creep using roleTemplates.harv");
-			if (spawn.memory.oddOrEven === 1) {
-				spawn.memory.oddOrEven = 0;
-				roleTemplates.harv.state.harvesterTarget = 0;
-				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
-			} else {
-				spawn.memory.oddOrEven = 1;
-				roleTemplates.harv.state.harvesterTarget = 1;
-				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
-			}
+			if (E < 650) {
+				// console.log("creating a creep using roleTemplates.harv");
+				console.log("spawning a small harvester");
+				if (spawn.memory.oddOrEven === 1) {
+					spawn.memory.oddOrEven = 0;
+					roleTemplates.harv.state.harvesterTarget = 0;
+					spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
+				} else {
+					spawn.memory.oddOrEven = 1;
+					roleTemplates.harv.state.harvesterTarget = 1;
+					spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
+				}
 
+			} else if (E < 650) {
+				console.log("spawning a LARGE harvester");
+				if (spawn.memory.oddOrEven === 1) {
+					spawn.memory.oddOrEven = 0;
+					roleTemplates.harv.state.harvesterTarget = 0;
+					spawn.createCreep(roleTemplates.harv.largeBody, roleTemplates.harv.name, roleTemplates.harv.state);
+				} else {
+					spawn.memory.oddOrEven = 1;
+					roleTemplates.harv.state.harvesterTarget = 1;
+					spawn.createCreep(roleTemplates.harv.largeBody, roleTemplates.harv.name, roleTemplates.harv.state);
+				}
+
+			} else {
+				if (spawn.memory.oddOrEven === 1) {
+					console.log("spawning an XXXTRALARGEHARVEESTER");
+					spawn.memory.oddOrEven = 0;
+					roleTemplates.harv.state.harvesterTarget = 0;
+					spawn.createCreep(roleTemplates.harv.xtraLargeBody, roleTemplates.harv.name, roleTemplates.harv.state);
+				} else {
+					console.log("spawning an XXXTRALARGEHARVEESTER");
+					spawn.memory.oddOrEven = 1;
+					roleTemplates.harv.state.harvesterTarget = 1;
+					spawn.createCreep(roleTemplates.harv.xtraLargeBody, roleTemplates.harv.name, roleTemplates.harv.state);
+				}
+			}
 		} else if (spawnMem.upgraders < upgraderLimit) {
 			//console.log("creating a creep with roleTemplates.upgr");
+			console.log("spawning a small ugrader");
 			spawn.createCreep(roleTemplates.upgr.body, roleTemplates.upgr.name, roleTemplates.upgr.state);
 			//console.log(spawn.createCreep(roleTemplates.upgr.body, roleTemplates.upgr.name, roleTemplates.upgr.state));
 		} else if (spawnMem.builders < builderLimit) {
-			spawn.createCreep(roleTemplates.bldr.body, roleTemplates.bldr.name, roleTemplates.bldr.state);
+			if (E < 450) {
+				console.log("spawning a small builder");
+				spawn.createCreep(roleTemplates.bldr.body, roleTemplates.bldr.name, roleTemplates.bldr.state);
+			} else if (E < 650) {
+				console.log("spawning a LARGE builder");
+				spawn.createCreep(roleTemplates.bldr.largeBody, roleTemplates.bldr.name, roleTemplates.bldr.state);
+			} else {
+				console.log("spawning an XXXTRA_LARGE builder");
+				spawn.createCreep(roleTemplates.bldr.xtraLargeBody, roleTemplates.bldr.name, roleTemplates.bldr.state);
+			}
+
 		}
 
 

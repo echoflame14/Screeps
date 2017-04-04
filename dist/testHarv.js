@@ -1,7 +1,7 @@
 module.exports = {
 
 	run: function (creep) {
-
+		let statusToReturn = [];
 		let spawn = Game.spawns["Spawn1"];
 		let storeTarget;
 		if (spawn.energy < 300) {
@@ -16,16 +16,8 @@ module.exports = {
 			storeTarget = _.sortBy(storeTarget, a => creep.pos.getRangeTo(a));
 			storeTarget = storeTarget[0];
 		}
-		//console.log("storeTarget = ", storeTarget);
-		//console.log(storeTarget);
 		let sources = creep.room.find(FIND_SOURCES_ACTIVE);
-		//	console.log("sources before filter = ", sources);
-		// ToDo add logic to send creep to different source's harvest spots are full
-		//	console.log("sources after filter = ", sources);
-		//let targets = _.sortBy(sources, s => creep.pos.getRangeTo(s));
-		//console.log("targets = ", targets);
 		let targets = sources;
-		//console.log(creep, ".carry.energy = ", creep.carry.energy);
 		if (creep.carry.energy < creep.carryCapacity) {
 			if (creep.memory.harvesterTarget === 0) {
 				if (creep.harvest(targets[0]) === ERR_NOT_IN_RANGE) {
@@ -48,8 +40,6 @@ module.exports = {
 				creep.moveTo(storeTarget);
 			}
 		}
-
-
 	}
 
 

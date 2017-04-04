@@ -1,9 +1,8 @@
 module.exports = {
 	run: function (creep) {
-		//console.log(creep, " is a builder");
 		var needsWork = [];
 		var structures = creep.room.find(FIND_STRUCTURES);
-		for (var a in structures) {
+		for (let a in structures) {
 			if (structures[a].hits < structures[a].hitsMax) {
 				needsWork.push(structures[a]);
 			}
@@ -11,43 +10,68 @@ module.exports = {
 
 		//   	needsWork.sort((x,y) => x.hits - y.hits);
 		if (needsWork[0] !== undefined) {
-			console.log(needsWork[0], ": needs work! ", creep, "moving to bulid now");
+			//console.log(needsWork[0], ": needs work! ", creep, "moving to bulid now");
 			if (creep.carry.energy < creep.carryCapacity) {
 				//console.log("not enough energy");
 				if (creep.withdraw(Game.spawns["Spawn1"], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(Game.spawns["Spawn1"]);
+
 					//console.log("not in range of spawn");
 				}
 			} else {
-				//console.log("plenty of energy");
-				if (creep.repair(needsWork[0]) === ERR_NOT_IN_RANGE) {
+				if (!needsWork[0].assigned && creep.repair(needsWork[0]) === ERR_NOT_IN_RANGE) {
+
+					//console.log(needsWork[0], "Needs work");
 					creep.moveTo(needsWork[0]);
+					needsWork[0].assigned = true;
+					needsWork[0].assignedTo = creep;
+					//console.log("needsWork[0].assigned == ", needsWork[0].assigned);
 					//console.log("not in range, moving to needsWork");
-				} else {
-					console.log("in range, building");
+
+
+				} else if (needsWork[0].assignedTo === creep) {
 					creep.repair(needsWork[0]);
+					if (needsWork[0].hits === needsWork[0].hitsMax) {
+						needsWork[0].assigned = false;
+						needsWork[0].assignedTo = undefined;
+					} else {
+						needsWork[0].assigned = true;
+						needsWork[0].assignedTo = creep;
+					}
+					//console.log("in range, building");
 				}
 			}
 		} else if (creep.carry.energy <= 1) {
 			//console.log("creep.carry.energy < creep.carryCapacity");
-			var sources = Game.spawns["Spawn1"];
+			let sources = Game.spawns["Spawn1"];
 			if (sources.transferEnergy(creep) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(sources);
 			}
 		} else {
+			//console.log("got here boiz");
 			let sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
 			let roads = [];
-			for (var site in sites) {
+			let sortedSites = [];
+			for (let site in sites) {
 				if (sites[site].structureType === "road") {
 					roads.push(sites[site]);
+				} else {
+					sortedSites.push(sites[site]);
 				}
+
 			}
 			let closeSite;
-			if (roads) {
+			//console.log("Roads = ", roads);
+			if (roads[0] !== undefined) {
+				//console.log("there are roads");
 				closeSite = creep.pos.findClosestByPath(roads);
+
+				//console.log("There are roads, going to them first");
 			} else {
-				closeSite = creep.pos.findClosestByPath(sites);
+				//console.log("There are no roads");
+				closeSite = creep.pos.findClosestByPath(sortedSites);
 			}
+			//console.log(closeSite, "closeSite");
 
 
 			if (creep.build(closeSite) === ERR_NOT_IN_RANGE) {
