@@ -1,67 +1,104 @@
-var mt = require('manualTasks');
 module.exports = {
-    updateTotals: function(){
 
-        var spawnList = Game.spawns;
-        var creepList = Game.spawns["Spawn1"].room.find(FIND_MY_CREEPS);
-        //console.log(creepList);
-        var harvesters = [];
-        var builders = [];
-        var upgraders = [];
-		var movers = [];
+	updateTotals: function () {
+		// purpose = update the memory in game of the total number of each type of creep
+		let spawn = Game.spawns["Spawn1"];
+		spawn.memory.totals = {
+			harvesters: 0,
+			upgraders: 0,
+			builders: 0,
+			movers: 0
+		};
 
-        for(let name in creepList){
-            //console.log(creepList[name].memory.role);
-            switch(creepList[name].memory.role){
-                case "harvester":
-                    harvesters.push(creepList[name].memory.role);
-                    break;
-                case "upgrader":
-                    upgraders.push(creepList[name].memory.role);
-                    break;
-                case "builder":
-                    builders.push(creepList[name].memory.role);
-                    break;
-				case "mover":
-					movers.push(creepList[name].memory.role);
-					break;
-                default:
-                    console.log("not mine?");
-            }
-        }
-        //console.log("Harvesters.length = ",harvesters.length);
-        for(let n in spawnList){
-            var spawnN = spawnList[n];
-            spawnN.memory.totalHarvesters = harvesters.length;
-            spawnN.memory.totalUpgraders = upgraders.length;
-            spawnN.memory.totalBuilders = builders.length;
-			spawnN.memory.totalMovers = movers.length;
-            //console.log(spawnN, ": harvesters = ", spawnN.memory.totalHarvesters);
-        }
-		if(spawnN.memory.totalHarvesters < 4 && spawnN.memory.totalUpgraders >= 1){
-            // console.log("totalHarvester is too low. Spawing another one");
-            mt.changeToHarvester(3);
+		let spawnMem = spawn.memory;
+		let creepsArr = Game.creeps;
 
-        }
+		for (let i in creepsArr) {
+			switch (creepsArr[i].memory.role) {
+			case 'harvester':
+				spawn.memory.totals.harvesters++;
+				break;
+			case 'upgrader':
+				spawnMem.totals.upgraders++;
+				break;
+			case 'builder':
+				if (spawnMem.totals.builders) {
+					spawnMem.totals.builders++;
+				} else {
+					spawnMem.totals.builders = 0;
+				}
+				break;
+			case 'mover':
+				if (spawnMem.totals.movers) {
+					spawnMem.totals.movers++;
+				} else {
+					spawnMem.totals.movers = 0;
+				}
+				break;
+			default:
+				console.log("Creep has no role");
+			}
+		}
+	},
 
-		if(spawnN.memory.totalHarvesters < 12 && spawnN.energy >= 300){
-            console.log("totalHarvester is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK,WORK, MOVE, CARRY], undefined, {role: 'harvester'});
-        }
-		else if(spawnN.memory.totalMovers < 3 && spawnN.energy >= 200){
-            console.log("totalHarvester is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([MOVE, MOVE, CARRY, CARRY], undefined, {role: 'harvester'});
-        }
-        else if(spawnN.memory.totalUpgraders < 8 && spawnN.energy >= 250){
-            console.log("totalUpgrader is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK, MOVE, MOVE, CARRY], undefined, {role: 'upgrader'});
-        }
-        else if(spawnN.memory.totalBuilders < 3 && spawnN.memory.totalUpgraders === 3 && spawnN.energy >= 300){
-            console.log("totalBuilder is too low. Spawing another one");
-            Game.spawns["Spawn1"].createCreep([WORK,WORK,MOVE,CARRY], undefined, {role: 'builder'});
-        }
+	spawnIfNeeded: function () { // spawning creeps if they are needed
+		let spawn = Game.spawns["Spawn1"];
+		let spawnMem = spawn.memory.totals;
+		let creepsArr = Game.creeps;
+		let roleTemplates = {
+			harv: {
+				body: [WORK, WORK, MOVE, CARRY],
+				name: undefined,
+				state: {
+					role: 'harvester',
+					needsToMine: true,
+					needsToEmpty: false,
+					mining: false,
+					transfered: false,
+					harvestTarget: undefined
+				}
+			},
+			upgr: {
+				body: [WORK, MOVE, CARRY, CARRY],
+				name: undefined,
+				state: {
+					role: 'upgrader'
+				}
+			},
+			bldr: {
+				body: [WORK, WORK, MOVE, CARRY],
+				name: undefined,
+				state: {
+					role: 'builder'
+				}
+			}
+		};
+		let harvesterLimit = 10;
+		let upgraderLimit = 1;
+		let builderLimit = 1;
+		if (spawnMem.harvesters < harvesterLimit) {
+			// console.log("creating a creep using roleTemplates.harv");
+			if (spawnMem.harvesters < 5) {
+				roleTemplates.harv.state.harvesterTarget = 0;
+				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
+			} else {
+				roleTemplates.harv.state.harvesterTarget = 1;
+				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
+			}
+
+		} else if (spawnMem.upgraders < upgraderLimit) {
+			//console.log("creating a creep with roleTemplates.upgr");
+			spawn.createCreep(roleTemplates.upgr.body, roleTemplates.upgr.name, roleTemplates.upgr.state);
+			//console.log(spawn.createCreep(roleTemplates.upgr.body, roleTemplates.upgr.name, roleTemplates.upgr.state));
+		} else if (spawnMem.builders < builderLimit) {
+			spawn.createCreep(roleTemplates.bldr.body, roleTemplates.bldr.name, roleTemplates.bldr.state);
+		}
 
 
 
-    }
+
+	}
+
+
+
 };
