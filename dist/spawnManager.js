@@ -22,11 +22,7 @@ module.exports = {
 				spawnMem.totals.upgraders++;
 				break;
 			case 'builder':
-				if (spawnMem.totals.builders) {
-					spawnMem.totals.builders++;
-				} else {
-					spawnMem.totals.builders = 0;
-				}
+				spawnMem.totals.builders++;
 				break;
 			case 'mover':
 				if (spawnMem.totals.movers) {
@@ -66,22 +62,31 @@ module.exports = {
 				}
 			},
 			bldr: {
-				body: [WORK, WORK, MOVE, CARRY],
+				body: [WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY],
 				name: undefined,
 				state: {
 					role: 'builder'
 				}
 			}
 		};
+		let totalHarvesters = 0;
+		for (let i in Game.spawns.creeps) {
+			if (Game.spawns["Spawn1"].creeps.state.role === 'harvester') {
+				totalHarvesters++;
+			}
+			console.log(totalHarvesters);
+		}
 		let harvesterLimit = 10;
 		let upgraderLimit = 1;
-		let builderLimit = 1;
+		let builderLimit = 4;
 		if (spawnMem.harvesters < harvesterLimit) {
 			// console.log("creating a creep using roleTemplates.harv");
-			if (spawnMem.harvesters < 5) {
+			if (spawn.memory.oddOrEven === 1) {
+				spawn.memory.oddOrEven = 0;
 				roleTemplates.harv.state.harvesterTarget = 0;
 				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
 			} else {
+				spawn.memory.oddOrEven = 1;
 				roleTemplates.harv.state.harvesterTarget = 1;
 				spawn.createCreep(roleTemplates.harv.body, roleTemplates.harv.name, roleTemplates.harv.state);
 			}

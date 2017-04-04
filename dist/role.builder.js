@@ -35,9 +35,20 @@ module.exports = {
 				creep.moveTo(sources);
 			}
 		} else {
-			var sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+			let sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+			let roads = [];
+			for (var site in sites) {
+				if (sites[site].structureType === "road") {
+					roads.push(sites[site]);
+				}
+			}
+			let closeSite;
+			if (roads) {
+				closeSite = creep.pos.findClosestByPath(roads);
+			} else {
+				closeSite = creep.pos.findClosestByPath(sites);
+			}
 
-			var closeSite = creep.pos.findClosestByPath(sites);
 
 			if (creep.build(closeSite) === ERR_NOT_IN_RANGE) {
 				creep.moveTo(closeSite);

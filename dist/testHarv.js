@@ -22,19 +22,19 @@ module.exports = {
 		//	console.log("sources before filter = ", sources);
 		// ToDo add logic to send creep to different source's harvest spots are full
 		//	console.log("sources after filter = ", sources);
-		let targets = _.sortBy(sources, s => creep.pos.getRangeTo(s));
+		//let targets = _.sortBy(sources, s => creep.pos.getRangeTo(s));
 		//console.log("targets = ", targets);
-
+		let targets = sources;
 		//console.log(creep, ".carry.energy = ", creep.carry.energy);
 		if (creep.carry.energy < creep.carryCapacity) {
-			if (creep.memory.harvestTarget === 1) {
-				if (creep.harvest(targets[1]) === ERR_NOT_IN_RANGE) {
-					creep.moveTo(targets[1]);
-				}
-			}
-			if (creep.memory.harvestTarget === 0) {
+			if (creep.memory.harvesterTarget === 0) {
 				if (creep.harvest(targets[0]) === ERR_NOT_IN_RANGE) {
 					creep.moveTo(targets[0]);
+				}
+			}
+			if (creep.memory.harvesterTarget === 1) {
+				if (creep.harvest(targets[1]) === ERR_NOT_IN_RANGE) {
+					creep.moveTo(targets[1]);
 				}
 			} else {
 				if (creep.harvest(targets[0]) === ERR_NOT_IN_RANGE) {
