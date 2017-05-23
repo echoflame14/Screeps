@@ -13,31 +13,23 @@ module.exports = {
 			//console.log(needsWork[0], ": needs work! ", creep, "moving to bulid now");
 			if (creep.carry.energy < creep.carryCapacity) {
 				//console.log("not enough energy");
+
 				if (creep.withdraw(Game.spawns["Spawn1"], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(Game.spawns["Spawn1"]);
 
 					//console.log("not in range of spawn");
 				}
 			} else {
-				if (!needsWork[0].assigned && creep.repair(needsWork[0]) === ERR_NOT_IN_RANGE) {
+				if (creep.repair(needsWork[0]) === ERR_NOT_IN_RANGE) {
 
 					//console.log(needsWork[0], "Needs work");
 					creep.moveTo(needsWork[0]);
-					needsWork[0].assigned = true;
-					needsWork[0].assignedTo = creep;
 					//console.log("needsWork[0].assigned == ", needsWork[0].assigned);
 					//console.log("not in range, moving to needsWork");
 
 
-				} else if (needsWork[0].assignedTo === creep) {
+				} else {
 					creep.repair(needsWork[0]);
-					if (needsWork[0].hits === needsWork[0].hitsMax) {
-						needsWork[0].assigned = false;
-						needsWork[0].assignedTo = undefined;
-					} else {
-						needsWork[0].assigned = true;
-						needsWork[0].assignedTo = creep;
-					}
 					//console.log("in range, building");
 				}
 			}

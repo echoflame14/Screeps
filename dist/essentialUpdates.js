@@ -23,5 +23,6 @@ module.exports = {
 		}
 		let returnText = ["sites left:    roads-" + sortedSites.road, "    extensions-", sortedSites.extension, "    towers-", sortedSites.tower];
 		console.log(returnText);
+
 	}
 };

@@ -79,9 +79,9 @@ module.exports = {
 			}
 			console.log(totalHarvesters);
 		}
-		let harvesterLimit = 10;
-		let upgraderLimit = 1;
-		let builderLimit = 4;
+		let harvesterLimit = 14;
+		let upgraderLimit = 14;
+		let builderLimit = 3;
 		console.log(Game.rooms['W35N52'].energyAvailable);
 		let E = Game.rooms['W35N52'].energyAvailable;
 		if (spawnMem.harvesters < harvesterLimit) {
